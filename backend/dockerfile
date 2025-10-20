@@ -1,0 +1,10 @@
+FROM eclipse-temurin:21-jre-alpine
+
+# On définit le répertoire de travail à l'intérieur du conteneur
+WORKDIR /app
+
+# On copie le code compilé (.class) de notre machine vers le conteneur
+COPY Main.class .
+
+# La commande qui sera exécutée au démarrage du conteneur
+CMD ["java", "Main"]

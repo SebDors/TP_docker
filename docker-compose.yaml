@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # Le service de base de données
+  database:
+    build: ./database
+    container_name: tp1_database
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=usr
+      - POSTGRES_PASSWORD=pwd
+    volumes:
+      - db-data:/var/lib/postgresql/data  # Utilise un volume nommé pour la persistance
+    networks:
+      - app-network
+    restart: unless-stopped # Redémarre le conteneur sauf s'il a été stoppé manuellement
+
+  # Le service backend API
+  backend:
+    build: ./simpleapi
+    container_name: tp1_api
+    depends_on:
+      - database  # Attend que le service 'database' soit démarré avant de se lancer
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Le service serveur web (reverse proxy)
+  httpd:
+    build: ./httpd
+    container_name: tp1_httpd
+    depends_on:
+      - backend
+    ports:
+      - "80:80"  # Le seul service exposé à l'extérieur
+    networks:
+      - app-network
+    restart: unless-stopped
+
+# Définition du réseau partagé
+networks:
+  app-network:
+    driver: bridge
+
+# Définition du volume pour les données de la base de données
+volumes:
+  db-data:
+    driver: local

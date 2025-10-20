@@ -1,0 +1,5 @@
+# On utilise l'image officielle d'Apache httpd, version Alpine pour sa légèreté
+FROM httpd:2.4-alpine
+
+# On écrase la configuration par défaut d'Apache avec la nôtre
+COPY ./my-httpd.conf /usr/local/apache2/conf/httpd.conf
