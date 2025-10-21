@@ -28,9 +28,18 @@ jobs:
           distribution: 'temurin'
 
       # Étape 3 : Lancer la commande Maven pour compiler et tester
-      - name: Build and test with Maven
-        # On spécifie le chemin vers le pom.xml de l'API
-        run: mvn -B clean verify --file ./simpleapi/pom.xml
+      - name: Build, test and analyze with Maven
+        env:
+          # On rend les secrets disponibles comme variables d'environnement pour cette étape
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Secret spécial fourni par GitHub
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        # La commande Maven est maintenant plus longue
+        run: >
+          mvn -B verify sonar:sonar
+          -Dsonar.projectKey=SebDors_TP_docker
+          -Dsonar.organization=sebdors
+          -Dsonar.host.url=https://sonarcloud.io
+          --file ./simpleapi/pom.xml
 
   build-and-push:
     # Ce job a besoin que 'test-backend' se termine avec succès avant de démarrer
