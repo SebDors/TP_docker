@@ -82,7 +82,7 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops_tp-httpd:latest
           push: ${{ github.ref == 'refs/heads/main' }}
   deploy:
-    needs: build-and-push # S'exécute après la publication des images
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -97,7 +97,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
 
       - name: Run Ansible Playbook
         run: |
