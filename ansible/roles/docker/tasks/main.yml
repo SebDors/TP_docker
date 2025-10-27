@@ -1,0 +1,50 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/docker
+# Tâche 1: Installer les paquets prérequis pour Docker
+    - name: 1 - Install prerequisites
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - python3-pip
+        state: latest
+        update_cache: yes
+
+    # Tâche 2: Ajouter la clé GPG officielle de Docker pour sécuriser les téléchargements
+    - name: 2 - Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+
+    # Tâche 3: Ajouter le dépôt (la source) officiel de Docker à notre système
+    - name: 3 - Add Docker APT repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_facts['distribution_release'] }} stable"
+        state: present
+        update_cache: yes
+
+    # Tâche 4: Installer le moteur Docker (Docker Engine)
+    - name: 4 - Install Docker Engine
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+
+    # Tâche 5: Installer le SDK Python pour Docker via APT
+    - name: 5 - Install Docker SDK for Python
+      apt:
+        name: python3-docker
+        state: present
+
+    # Tâche 6: S'assurer que le service Docker est démarré et activé
+    - name: 6 - Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: yes

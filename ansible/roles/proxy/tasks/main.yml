@@ -1,0 +1,13 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/proxy
+- name: Run httpd proxy container
+  docker_container:
+    name: tp1_httpd
+    image: "sebdors/devops_tp-httpd:latest"
+    state: started
+    restart_policy: unless-stopped
+    networks:
+      - name: app-network
+    ports:
+      - "80:80"
