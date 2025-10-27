@@ -81,3 +81,24 @@ jobs:
           context: ./httpd
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops_tp-httpd:latest
           push: ${{ github.ref == 'refs/heads/main' }}
+  deploy:
+    needs: build-and-push # S'exécute après la publication des images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml
