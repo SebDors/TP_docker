@@ -39,7 +39,7 @@ jobs:
           -Dsonar.projectKey=SebDors_TP_docker
           -Dsonar.organization=sebdors
           -Dsonar.host.url=https://sonarcloud.io
-          --file ./simpleapi/pom.xml
+          --file ./backend/pom.xml
 
   build-and-push:
     # Ce job a besoin que 'test-backend' se termine avec succès avant de démarrer
@@ -61,7 +61,7 @@ jobs:
       - name: Build and push API image
         uses: docker/build-push-action@v6
         with:
-          context: ./simpleapi  # Le chemin vers le Dockerfile de l'API
+          context: ./backend  # Le chemin vers le Dockerfile de l'API
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops_tp-backend:latest
           # On ne pousse l'image que si le commit est sur la branche 'main'
           push: ${{ github.ref == 'refs/heads/main' }}
