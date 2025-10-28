@@ -17,7 +17,7 @@ services:
 
   # Le service backend API
   backend:
-    build: ./simpleapi
+    build: ./backend
     container_name: tp1_api
     depends_on:
       - database  # Attend que le service 'database' soit démarré avant de se lancer
